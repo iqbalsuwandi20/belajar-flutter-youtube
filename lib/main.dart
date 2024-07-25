@@ -1,12 +1,41 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_basic/widgets/color_box.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  // List<ColorBox> allItems = List.generate(
+  //   10,
+  //   (index) => ColorBox(
+  //     text: "Box - ${index + 1}",
+  //     colors: Color.fromARGB(
+  //       255,
+  //       200 + Random().nextInt(256),
+  //       200 + Random().nextInt(256),
+  //       200 + Random().nextInt(256),
+  //     ),
+  //   ),
+  // );
+
+  List<Map<String, dynamic>> data = List.generate(
+    10,
+    (index) => {
+      "text": "Box - ${index + 1}",
+      "color": Color.fromARGB(
+        255,
+        200 + Random().nextInt(256),
+        200 + Random().nextInt(256),
+        200 + Random().nextInt(256),
+      ),
+    },
+  );
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +46,17 @@ class MyApp extends StatelessWidget {
           centerTitle: true,
           backgroundColor: Colors.red[900],
         ),
-        body: const SingleChildScrollView(
+        body: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
-            children: [
-              ColorBox(text: "RED", colors: Colors.red),
-              ColorBox(text: "YELLOW", colors: Colors.amber),
-              ColorBox(text: "GREEN", colors: Colors.green),
-              ColorBox(text: "RED", colors: Colors.red),
-              ColorBox(text: "YELLOW", colors: Colors.amber),
-              ColorBox(text: "GREEN", colors: Colors.green),
-              ColorBox(text: "RED", colors: Colors.red),
-              ColorBox(text: "YELLOW", colors: Colors.amber),
-              ColorBox(text: "GREEN", colors: Colors.green),
-            ],
+            children: data
+                .map(
+                  (e) => ColorBox(
+                    text: e["text"],
+                    colors: e["color"],
+                  ),
+                )
+                .toList(),
           ),
         ),
       ),
