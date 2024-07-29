@@ -16,116 +16,66 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  bool isHidden = true;
-  TextEditingController emailC = TextEditingController();
-  TextEditingController passwordC = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Text Field",
-          style: TextStyle(color: Colors.white),
-        ),
-        backgroundColor: Colors.red[900],
-        centerTitle: true,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(30),
-        children: [
-          TextField(
-            controller: emailC,
-            autocorrect: false,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 20,
-              ),
-              label: const Text("Email"),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              // prefix: const Padding(
-              //   padding: EdgeInsets.only(right: 20),
-              //   child: Icon(Icons.email),
-              // ),
-              prefixIcon: const Icon(Icons.email_outlined),
-            ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-          TextField(
-            controller: passwordC,
-            autocorrect: false,
-            obscureText: isHidden,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 20,
-              ),
-              label: const Text("Password"),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              prefixIcon: const Icon(Icons.vpn_key_off_outlined),
-              suffixIcon: IconButton(
-                onPressed: () {
-                  setState(() {
-                    isHidden = !isHidden;
-                  });
-                  // if (isHidden == true) {
-                  //   isHidden = false;
-                  // } else {
-                  //   isHidden = true;
-                  // }
-                  // setState(() {});
-                },
-                icon: Icon(
-                  isHidden
-                      ? Icons.visibility_off_outlined
-                      : Icons.visibility_outlined,
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.teal,
+          title: const Text("Tab Bar", style: TextStyle(color: Colors.white)),
+          centerTitle: false,
+          bottom: const TabBar(
+            tabs: [
+              Tab(
+                child: Icon(
+                  Icons.camera,
+                  color: Colors.white,
                 ),
-                // icon: Icon(Icons.remove_red_eye_outlined),
               ),
-            ),
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          ElevatedButton(
-            onPressed: () {
-              print(
-                  "Login with Email : (${emailC.text}) and Password : (${passwordC.text})");
-            },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: 20,
+              Tab(
+                child: Icon(
+                  Icons.chat,
+                  color: Colors.white,
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+              Tab(
+                child: Icon(
+                  Icons.update,
+                  color: Colors.white,
+                ),
               ),
-              backgroundColor: Colors.red[900],
-            ),
-            child: const Text(
-              "Login",
-              style: TextStyle(color: Colors.white),
-            ),
+              Tab(
+                child: Icon(
+                  Icons.call,
+                  color: Colors.white,
+                ),
+              ),
+              // Tab(text: "Chats"),
+              // Tab(text: "Status"),
+              // Tab(text: "Calls"),
+            ],
           ),
-        ],
+        ),
+        body: const TabBarView(
+          children: [
+            Center(
+              child: Text("CAMERA"),
+            ),
+            Center(
+              child: Text("CHATS"),
+            ),
+            Center(
+              child: Text("STATUS"),
+            ),
+            Center(
+              child: Text("CALLS"),
+            ),
+          ],
+        ),
       ),
     );
   }
