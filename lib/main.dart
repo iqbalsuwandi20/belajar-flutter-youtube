@@ -9,72 +9,74 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class HomePage extends StatefulWidget {
+  HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final List data = [
+    {
+      "title": "Option to 1",
+      "data": 1,
+    },
+    {
+      "title": "Option to 2",
+      "data": 2,
+    },
+    {
+      "title": "Option to 3",
+      "data": 3,
+    },
+  ];
+
+  late int initialData;
+
+  @override
+  void initState() {
+    initialData = data[0]["data"];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 4,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.teal,
-          title: const Text("Tab Bar", style: TextStyle(color: Colors.white)),
-          centerTitle: false,
-          bottom: const TabBar(
-            tabs: [
-              Tab(
-                child: Icon(
-                  Icons.camera,
-                  color: Colors.white,
-                ),
-              ),
-              Tab(
-                child: Icon(
-                  Icons.chat,
-                  color: Colors.white,
-                ),
-              ),
-              Tab(
-                child: Icon(
-                  Icons.update,
-                  color: Colors.white,
-                ),
-              ),
-              Tab(
-                child: Icon(
-                  Icons.call,
-                  color: Colors.white,
-                ),
-              ),
-              // Tab(text: "Chats"),
-              // Tab(text: "Status"),
-              // Tab(text: "Calls"),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.red[900],
+        title: const Text(
+          "Drop Down",
+          style: TextStyle(color: Colors.white),
         ),
-        body: const TabBarView(
-          children: [
-            Center(
-              child: Text("CAMERA"),
-            ),
-            Center(
-              child: Text("CHATS"),
-            ),
-            Center(
-              child: Text("STATUS"),
-            ),
-            Center(
-              child: Text("CALLS"),
-            ),
-          ],
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(30),
+          child: DropdownButton<int>(
+            value: initialData,
+            items: data
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e['data'] as int,
+                    child: Text("${e["title"]}"),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                initialData = value!;
+              });
+            },
+          ),
         ),
       ),
     );
