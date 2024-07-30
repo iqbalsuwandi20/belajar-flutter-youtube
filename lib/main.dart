@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
@@ -17,33 +17,30 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final List data = [
-    {
-      "title": "Option to 1",
-      "data": 1,
-    },
-    {
-      "title": "Option to 2",
-      "data": 2,
-    },
-    {
-      "title": "Option to 3",
-      "data": 3,
-    },
-  ];
+  late int index;
 
-  late int initialData;
+  List showWidget = [
+    const Center(
+      child: Text("HOME"),
+    ),
+    const Center(
+      child: Text("PROFILE"),
+    ),
+    const Center(
+      child: Text("CART"),
+    ),
+  ];
 
   @override
   void initState() {
-    initialData = data[0]["data"];
+    index = 0;
     super.initState();
   }
 
@@ -52,32 +49,38 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red[900],
+        centerTitle: true,
         title: const Text(
-          "Drop Down",
+          "Bottom Navigation Bar",
           style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true,
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: DropdownButton<int>(
-            value: initialData,
-            items: data
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e['data'] as int,
-                    child: Text("${e["title"]}"),
-                  ),
-                )
-                .toList(),
-            onChanged: (value) {
-              setState(() {
-                initialData = value!;
-              });
-            },
+      body: showWidget[index],
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.red[900],
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.grey[900],
+        iconSize: 30,
+        currentIndex: index,
+        onTap: (value) {
+          setState(() {
+            index = value;
+          });
+        },
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
           ),
-        ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: "Cart",
+          ),
+        ],
       ),
     );
   }
