@@ -26,58 +26,212 @@ class HomePage extends StatelessWidget {
         backgroundColor: Colors.red[900],
         centerTitle: true,
         title: const Text(
-          "Bottom Sheet",
+          "Drawer",
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: ElevatedButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                isDismissible: false,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+      drawer: Drawer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.bottomLeft,
+              padding: const EdgeInsets.all(20),
+              height: 100,
+              width: double.infinity,
+              color: Colors.blue,
+              child: const Text(
+                "Dashboard Menu",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
                 ),
-                builder: (context) => SizedBox(
-                  height: 300,
-                  // color: Colors.white,
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        onTap: () => print("click on photo"),
-                        leading: const Icon(Icons.photo),
-                        title: const Text("Photo"),
-                      ),
-                      ListTile(
-                        onTap: () => print("click on music"),
-                        leading: const Icon(Icons.music_note),
-                        title: const Text("Music"),
-                      ),
-                      ListTile(
-                        onTap: () => print("click on video"),
-                        leading: const Icon(Icons.video_collection),
-                        title: const Text("Video"),
-                      ),
-                      ListTile(
-                        onTap: () => print("click on share"),
-                        leading: const Icon(Icons.share),
-                        title: const Text("Share"),
-                      ),
-                      ListTile(
-                        onTap: () => Navigator.pop(context),
-                        leading: const Icon(Icons.cancel),
-                        title: const Text("Cancel"),
-                      ),
-                    ],
+              ),
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
                   ),
-                ),
-              );
-            },
-            child: const Text("Show Bottom Sheet"),
-          ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Home");
+                    },
+                    leading: const Icon(Icons.home),
+                    title: const Text("Home"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                  ListTile(
+                    onTap: () {
+                      print("Menu Product");
+                    },
+                    leading: const Icon(Icons.shopping_cart),
+                    title: const Text("Cart"),
+                    trailing: const Icon(Icons.arrow_forward),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
