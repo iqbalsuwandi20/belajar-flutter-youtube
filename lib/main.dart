@@ -27,10 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController jobController = TextEditingController();
-
-  String responseResult = "Data not found";
+  String name = "Name not found";
+  String email = "Email not found";
 
   @override
   Widget build(BuildContext context) {
@@ -38,74 +36,66 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: const Text(
-          "HTTP Request Put / Patch",
+          "HTTP Request Delete",
           style: TextStyle(
             color: Colors.white,
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () async {
+              var response = await http.get(
+                Uri.parse("https://reqres.in/api/users/1"),
+              );
+
+              Map<String, dynamic> mybody = json.decode(response.body);
+
+              print(mybody);
+
+              setState(() {
+                name =
+                    "NAME : ${mybody["data"]["first_name"]} ${mybody["data"]["last_name"]}";
+                email = "EMAIL : ${mybody["data"]["email"]}";
+              });
+            },
+            icon: const Icon(
+              Icons.get_app,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          TextField(
-            controller: nameController,
-            autocorrect: false,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Name",
-            ),
+          Text(
+            name,
           ),
           const SizedBox(
-            height: 15,
+            height: 5,
           ),
-          TextField(
-            controller: jobController,
-            autocorrect: false,
-            keyboardType: TextInputType.text,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              labelText: "Job",
-            ),
+          Text(
+            email,
           ),
           const SizedBox(
             height: 15,
           ),
           ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[900]),
             onPressed: () async {
-              var response = await http.put(
-                Uri.parse("https://reqres.in/api/users/2"),
-                body: {
-                  "name": nameController.text,
-                  "job": jobController.text,
-                },
+              var response = await http.delete(
+                Uri.parse("https://reqres.in/api/users/1"),
               );
-
-              Map<String, dynamic> data =
-                  json.decode(response.body) as Map<String, dynamic>;
-
-              setState(
-                () {
-                  responseResult = "${data["name"]} - ${data["job"]}";
-                },
-              );
-
-              print(response.body);
+              if (response.statusCode == 204) {
+                name = "Name has been deleted";
+                email = "Email has been deleted";
+              }
             },
-            child: const Text("Submit"),
-          ),
-          const SizedBox(
-            height: 50,
-          ),
-          Divider(
-            color: Colors.red[900],
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          Center(
-            child: Text(responseResult),
+            child: const Text(
+              "Delete",
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         ],
       ),
