@@ -27,17 +27,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late String id;
-  late String email;
-  late String name;
+  TextEditingController nameController = TextEditingController();
+  TextEditingController jobController = TextEditingController();
 
-  @override
-  void initState() {
-    id = "id not found";
-    email = "email not found";
-    name = "name not found";
-    super.initState();
-  }
+  String responseResult = "Data not found";
 
   @override
   Widget build(BuildContext context) {
@@ -45,80 +38,75 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: const Text(
-          "HTTP Request Get",
+          "HTTP Request Post",
           style: TextStyle(
             color: Colors.white,
           ),
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "ID : $id",
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          TextField(
+            controller: nameController,
+            autocorrect: false,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Name",
             ),
-            Text(
-              "EMAIL : $email",
-              style: const TextStyle(
-                fontSize: 20,
-              ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          TextField(
+            controller: jobController,
+            autocorrect: false,
+            keyboardType: TextInputType.text,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: "Job",
             ),
-            Text(
-              "NAME : $name",
-              style: const TextStyle(
-                fontSize: 20,
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red[900],
-              ),
-              onPressed: () async {
-                var myResponse = await http.get(
-                  Uri.parse("https://reqres.in/api/users/3"),
-                );
-                if (myResponse.statusCode == 200) {
-                  // successfully get data
-                  print("successfully get data");
-                  Map<String, dynamic> data =
-                      json.decode(myResponse.body) as Map<String, dynamic>;
-                  setState(() {
-                    id = data["data"]["id"].toString();
-                    email = data["data"]["email"].toString();
-                    name =
-                        "${data["data"]["first_name"]} ${data["data"]["last_name"]}";
-                    // body = myResponse.body;
-                  });
-                } else {
-                  // unsuccessful get data
-                  print("ERROR ${myResponse.statusCode}");
-                  // setState(() {
-                  //   body = "ERROR ${myResponse.statusCode}";
-                  // });
-                }
-                // print(myResponse.statusCode);
-                // print("-----------");
-                // print(myResponse.headers);
-                // print("-----------");
-                // print(myResponse.body);
-              },
-              child: const Text(
-                "GET data",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              var response = await http.post(
+                Uri.parse("https://reqres.in/api/users"),
+                body: {
+                  "name": nameController.text,
+                  "job": jobController.text,
+                },
+              );
+
+              Map<String, dynamic> data =
+                  json.decode(response.body) as Map<String, dynamic>;
+
+              setState(
+                () {
+                  responseResult = "${data["name"]} - ${data["job"]}";
+                },
+              );
+              // print(response.body);
+            },
+            child: const Text("Submit"),
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          Divider(
+            color: Colors.red[900],
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Center(
+            child: Text(responseResult),
+          ),
+        ],
       ),
     );
   }
