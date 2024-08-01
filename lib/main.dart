@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.red[900],
         title: const Text(
-          "HTTP Request Post",
+          "HTTP Request Put / Patch",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -74,8 +74,8 @@ class _HomePageState extends State<HomePage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              var response = await http.post(
-                Uri.parse("https://reqres.in/api/users"),
+              var response = await http.put(
+                Uri.parse("https://reqres.in/api/users/2"),
                 body: {
                   "name": nameController.text,
                   "job": jobController.text,
@@ -90,7 +90,8 @@ class _HomePageState extends State<HomePage> {
                   responseResult = "${data["name"]} - ${data["job"]}";
                 },
               );
-              // print(response.body);
+
+              print(response.body);
             },
             child: const Text("Submit"),
           ),
