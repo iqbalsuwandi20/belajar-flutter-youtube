@@ -27,78 +27,100 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String name = "Name not found";
-  String email = "Email not found";
+  List<Map<String, dynamic>> allUser = [];
+
+  Future getAllUser() async {
+    try {
+      var response = await http.get(
+        Uri.parse("https://reqres.in/api/users?page=2"),
+      );
+      // print(response.body);
+      List data = (json.decode(response.body) as Map<String, dynamic>)["data"];
+
+      for (var element in data) {
+        allUser.add(element);
+      }
+
+      print(allUser);
+    } catch (e) {
+      // error
+      print("Error occurred");
+      print(e);
+    }
+    // await Future.delayed(
+    //   const Duration(seconds: 5),
+    // );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[900],
+        backgroundColor: Colors.blue[900],
         title: const Text(
-          "HTTP Request Delete",
+          "Future Builder",
           style: TextStyle(
             color: Colors.white,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              var response = await http.get(
-                Uri.parse("https://reqres.in/api/users/1"),
-              );
-
-              Map<String, dynamic> mybody = json.decode(response.body);
-
-              print(mybody);
-
-              setState(() {
-                name =
-                    "NAME : ${mybody["data"]["first_name"]} ${mybody["data"]["last_name"]}";
-                email = "EMAIL : ${mybody["data"]["email"]}";
-              });
-            },
-            icon: const Icon(
-              Icons.get_app,
-              color: Colors.white,
-            ),
-          ),
-        ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Text(
-            name,
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text(
-            email,
-          ),
-          const SizedBox(
-            height: 15,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red[900]),
-            onPressed: () async {
-              var response = await http.delete(
-                Uri.parse("https://reqres.in/api/users/1"),
-              );
-              if (response.statusCode == 204) {
-                name = "Name has been deleted";
-                email = "Email has been deleted";
-              }
-            },
-            child: const Text(
-              "Delete",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+      body: FutureBuilder(
+        future: getAllUser(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Text("Loading"),
+            );
+          } else {
+            return ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: allUser.length,
+              itemBuilder: (context, index) => ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: Colors.grey[300],
+                  backgroundImage: NetworkImage(
+                    allUser[index]["avatar"],
+                  ),
+                ),
+                title: Text(
+                  "${allUser[index]["first_name"]} ${allUser[index]["last_name"]}",
+                ),
+                subtitle: Text(
+                  "${allUser[index]["email"]}",
+                ),
+              ),
+            );
+          }
+        },
       ),
+      // body: Center(
+      //   child: ElevatedButton(
+      //     style: ElevatedButton.styleFrom(
+      //       backgroundColor: Colors.green[900],
+      //     ),
+      //     onPressed: () async {
+      //       // get data url api
+      //       var response = await http.get(
+      //         Uri.parse("https://reqres.in/api/users?page=2"),
+      //       );
+      //       List data =
+      //           (json.decode(response.body) as Map<String, dynamic>)["data"];
+      //       for (var element in data) {
+      //         Map<String, dynamic> user = element;
+      //         print(user["first_name"]);
+      //         print(user["id"]);
+      //         print(user["email"]);
+      //         print(user["avatar"]);
+      //       }
+      //       // print(data[0]);
+      //     },
+      //     child: const Text(
+      //       "Click this one",
+      //       style: TextStyle(color: Colors.white),
+      //     ),
+      //   ),
+      // ),
     );
   }
 }
