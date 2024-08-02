@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_basic/models/user_model.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -27,7 +28,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> allUser = [];
+  List<UserModel> allUser = [];
 
   Future getAllUser() async {
     try {
@@ -38,7 +39,15 @@ class _HomePageState extends State<HomePage> {
       List data = (json.decode(response.body) as Map<String, dynamic>)["data"];
 
       for (var element in data) {
-        allUser.add(element);
+        allUser.add(UserModel.fromJson(element)
+            // UserModel(
+            //   id: element["id"],
+            //   email: element["email"],
+            //   firstName: element["first_name"],
+            //   lastName: element["last_name"],
+            //   avatar: element["avatar"],
+            // ),
+            );
       }
 
       print(allUser);
@@ -58,7 +67,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.blue[900],
         title: const Text(
-          "Future Builder",
+          "Model",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -73,6 +82,11 @@ class _HomePageState extends State<HomePage> {
               child: Text("Loading"),
             );
           } else {
+            if (allUser.isEmpty) {
+              return const Center(
+                child: Text("Data not found"),
+              );
+            }
             return ListView.builder(
               padding: const EdgeInsets.all(20),
               itemCount: allUser.length,
@@ -80,14 +94,14 @@ class _HomePageState extends State<HomePage> {
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey[300],
                   backgroundImage: NetworkImage(
-                    allUser[index]["avatar"],
+                    allUser[index].avatar,
                   ),
                 ),
                 title: Text(
-                  "${allUser[index]["first_name"]} ${allUser[index]["last_name"]}",
+                  "${allUser[index].firstName} ${allUser[index].lastName}",
                 ),
                 subtitle: Text(
-                  "${allUser[index]["email"]}",
+                  allUser[index].email,
                 ),
               ),
             );
