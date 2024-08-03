@@ -1,69 +1,37 @@
-import 'dart:convert';
-
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_basic/models/summary.dart';
-import 'package:flutter_basic/widgets/summary_item.dart';
-import 'package:http/http.dart' as http;
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+// ignore: must_be_immutable
+class HomePage extends StatelessWidget {
+  var faker = Faker();
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late Summary summary;
-
-  Future getSummary() async {
-    var response = await http.get(
-      Uri.parse("https://reqres.in/api/users?page=2"),
-    );
-    Map<String, dynamic> data =
-        json.decode(response.body) as Map<String, dynamic>;
-    summary = Summary.fromJson(data);
-  }
+  HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    print(faker.person.name());
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.pink[900],
-        title: const Text(
-          "Learning HTTP Request",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
         centerTitle: true,
+        backgroundColor: Colors.green[900],
+        title: const Text(
+          "Package Faker",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-      body: FutureBuilder(
-          future: getSummary(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Text("Loading"),
-              );
-            }
-            if (!snapshot.hasData) {
-              return const Center(
-                child: Text("No data"),
-              );
-            }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SummaryItem(
-                  title: "CONFIRMED",
-                  value: "${summary.id}",
-                ),
-                SummaryItem(
-                  title: "DEATHS",
-                  value: "${summary.id}",
-                ),
-              ],
-            );
-          }),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: 50,
+        itemBuilder: (context, index) => ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Colors.grey,
+            backgroundImage:
+                NetworkImage("https://picsum.photos/id/${237 + index}/200/300"),
+          ),
+          title: Text(faker.person.name()),
+          subtitle: Text(faker.internet.email()),
+        ),
+      ),
     );
   }
 }
