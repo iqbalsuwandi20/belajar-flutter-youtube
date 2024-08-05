@@ -27,52 +27,52 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         title: const Text(
-          "Dialog GetX",
+          "BottomSheet GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
       body: Center(
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.red[900]),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.brown[900]),
           onPressed: () {
-            Get.defaultDialog(
-              title: "This is title",
-              content: const Text("This is alert dialog getx"),
-              backgroundColor: Colors.pink[900],
-              actions: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow[900]),
-                  onPressed: () {},
-                  child: const Text(
-                    "DONE",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
+            Get.bottomSheet(
+              Container(
+                height: 200,
+                color: Colors.purple[900],
+                child: ListView(
+                  children: const [
+                    ListTile(
+                      leading: Icon(
+                        Icons.person,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        "Profile",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.yellow[900]),
-                  onPressed: () {},
-                  child: const Text(
-                    "CANCEL",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontStyle: FontStyle.italic,
+                    ListTile(
+                      leading: Icon(Icons.settings, color: Colors.white),
+                      title: Text(
+                        "Setting",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  ),
+                    ListTile(
+                      leading: Icon(Icons.music_note, color: Colors.white),
+                      title: Text(
+                        "Music",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             );
           },
           child: const Text(
-            "Open Dialog",
-            style: TextStyle(
-              color: Colors.white,
-              fontStyle: FontStyle.italic,
-            ),
+            "Open bottom sheet",
+            style: TextStyle(color: Colors.white),
           ),
         ),
       ),
