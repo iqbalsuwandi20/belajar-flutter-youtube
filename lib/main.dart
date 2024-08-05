@@ -27,31 +27,52 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         title: const Text(
-          "SnackBar GetX",
+          "Dialog GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
       body: Center(
         child: ElevatedButton(
-          style: ElevatedButton.styleFrom(backgroundColor: Colors.green[900]),
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.red[900]),
           onPressed: () {
-            Get.snackbar("Hi", "This is snackbar getx",
-                snackPosition: SnackPosition.BOTTOM,
-                colorText: Colors.white,
-                backgroundColor: Colors.yellow[900]);
-            // ScaffoldMessenger.of(context).showSnackBar(
-            //   SnackBar(
-            //     content: const Text("Test"),
-            //     action: SnackBarAction(
-            //       label: "Hai",
-            //       onPressed: () {},
-            //     ),
-            //   ),
-            // );
+            Get.defaultDialog(
+              title: "This is title",
+              content: const Text("This is alert dialog getx"),
+              backgroundColor: Colors.pink[900],
+              actions: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow[900]),
+                  onPressed: () {},
+                  child: const Text(
+                    "DONE",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.yellow[900]),
+                  onPressed: () {},
+                  child: const Text(
+                    "CANCEL",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
+              ],
+            );
           },
           child: const Text(
-            "This is snackbar",
-            style: TextStyle(color: Colors.white),
+            "Open Dialog",
+            style: TextStyle(
+              color: Colors.white,
+              fontStyle: FontStyle.italic,
+            ),
           ),
         ),
       ),
