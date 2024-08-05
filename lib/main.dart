@@ -10,23 +10,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: HomePage(),
     );
   }
 }
 
-class Controller extends GetxController {
-  var count = 0.obs; // state yang akan selalu di pantau perubahan
-  increment() => count + 1;
-  decrement() => count - 1;
-}
-
 class HomePage extends StatelessWidget {
-  HomePage({super.key});
-
-  final myController = Get.put(Controller());
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,55 +27,32 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         title: const Text(
-          "State Management GetX",
+          "SnackBar GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () => Text(
-                "${myController.count.value}",
-                style: const TextStyle(
-                  fontSize: 40,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic,
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[900]),
-                  onPressed: () {
-                    myController.decrement();
-                  },
-                  child: const Text(
-                    "-",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green[900]),
-                  onPressed: () {
-                    myController.increment();
-                  },
-                  child: const Text(
-                    "+",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            )
-          ],
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green[900]),
+          onPressed: () {
+            Get.snackbar("Hi", "This is snackbar getx",
+                snackPosition: SnackPosition.BOTTOM,
+                colorText: Colors.white,
+                backgroundColor: Colors.yellow[900]);
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   SnackBar(
+            //     content: const Text("Test"),
+            //     action: SnackBarAction(
+            //       label: "Hai",
+            //       onPressed: () {},
+            //     ),
+            //   ),
+            // );
+          },
+          child: const Text(
+            "This is snackbar",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
