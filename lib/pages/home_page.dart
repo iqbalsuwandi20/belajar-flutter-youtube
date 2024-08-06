@@ -14,68 +14,321 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue[900],
         title: const Text(
-          "Reactive and Simple GetX",
+          "Tipe data RX GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Obx(
-            //   () => Text(
-            //     "${homeController.dataValue}",
-            //     style: const TextStyle(
-            //       fontSize: 50,
-            //       fontStyle: FontStyle.italic,
-            //     ),
-            //   ),
-            // ),
-            GetBuilder<HomeController>(
-              builder: (controller) => Text(
-                "${homeController.dataValue}",
-                style: const TextStyle(
-                  fontSize: 50,
-                  fontStyle: FontStyle.italic,
+      body: ListView(
+        padding: const EdgeInsets.all(20),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataInt}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                homeController.addData();
-              },
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Colors.yellow[900]),
-              child: const Text(
-                "Add Data",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[900]),
+                    onPressed: () {
+                      homeController.increment();
+                    },
+                    child: const Text(
+                      "Add value",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[900]),
+                    onPressed: () {
+                      homeController.decrement();
+                    },
+                    child: const Text(
+                      "Less value",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataString}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 30,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                homeController.refreshView();
-              },
-              style:
-                  ElevatedButton.styleFrom(backgroundColor: Colors.pink[900]),
-              child: const Text(
-                "Refresh page view",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[900]),
+                    onPressed: () {
+                      homeController.updateDataString();
+                    },
+                    child: const Text(
+                      "Update",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[900]),
+                    onPressed: () {
+                      homeController.resetDataString();
+                    },
+                    child: const Text(
+                      "Reset",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataDouble}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[900]),
+                    onPressed: () {
+                      homeController.incrementDouble();
+                    },
+                    child: const Text(
+                      "Add Double",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[900]),
+                    onPressed: () {
+                      homeController.decrementDouble();
+                    },
+                    child: const Text(
+                      "Less Duble",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataBoolean}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.red[900]),
+                onPressed: () {
+                  homeController.changeBool();
+                },
+                child: const Text(
+                  "Change boolean",
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataList}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[900]),
+                    onPressed: () {
+                      homeController.addListValue();
+                    },
+                    child: const Text(
+                      "Add list",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red[900]),
+                    onPressed: () {
+                      homeController.changeListValue();
+                    },
+                    child: const Text(
+                      "Change list",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Obx(
+                () => Text(
+                  "${homeController.dataSet}",
+                  style: const TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[900]),
+                    onPressed: () {
+                      homeController.addSetValue();
+                    },
+                    child: const Text(
+                      "Add Set",
+                      style: TextStyle(
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          Divider(
+            thickness: 10,
+            color: Colors.pink[900],
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Obx(
+                  () => ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.yellow[900],
+                      child: Text(
+                        "${homeController.dataMap["id"]}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    title: Text("${homeController.dataMap["name"]}"),
+                    subtitle: Text("${homeController.dataMap["age"]} year"),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[900]),
+                onPressed: () {
+                  homeController.changeName();
+                },
+                child: const Text(
+                  "Change",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[900]),
+                onPressed: () {
+                  homeController.resetDataMap();
+                },
+                child: const Text(
+                  "Reset",
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
