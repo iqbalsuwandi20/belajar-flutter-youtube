@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic/pages/page_one.dart';
+import 'package:flutter_basic/pages/home_page.dart';
 import 'package:get/get.dart';
 
 void main() {
@@ -11,9 +11,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
+    return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: PageOne(),
+      home: HomePage(),
     );
   }
 }
