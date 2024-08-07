@@ -1,4 +1,4 @@
-import 'package:flutter_basic/controllers/counter_controller.dart';
+import 'package:flutter_basic/bindings/counter_bindings.dart';
 import 'package:flutter_basic/pages/counter_page.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +7,6 @@ GetPage<dynamic> GetRoutes() {
   return GetPage(
     name: "/counter",
     page: () => CounterPage(),
-    binding: BindingsBuilder.put(() => CounterController()),
+    binding: CounterBindings(),
   );
 }

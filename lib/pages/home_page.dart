@@ -11,7 +11,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.red[900],
         title: const Text(
-          "Bindings GetX",
+          "Class Binding GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
