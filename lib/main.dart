@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_basic/pages/home_page.dart';
-import 'package:flutter_basic/routes/get_routes.dart';
+import 'package:flutter_basic/pages/login_page.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -14,9 +16,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: LoginPage(),
       getPages: [
-        GetRoutes(),
+        GetPage(
+          name: "/home",
+          page: () => HomePage(),
+        ),
+        GetPage(
+          name: "/login_page",
+          page: () => LoginPage(),
+        ),
       ],
     );
   }
