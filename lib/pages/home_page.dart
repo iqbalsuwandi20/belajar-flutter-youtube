@@ -9,51 +9,29 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        backgroundColor: Colors.brown[900],
+        backgroundColor: Colors.red[900],
         title: const Text(
-          "Route Named Management GetX",
+          "Bindings GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
-            onPressed: () {
-              // menggunakan routes getx
-              Get.toNamed("page_1");
+      body: Center(
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(backgroundColor: Colors.green[900]),
+          onPressed: () {
+            // binding sudah di folder routes
+            Get.toNamed('/counter');
 
-              // menggunakan routes
-              // Navigator.of(context).pushNamed("page_1");
-
-              // Navigator.of(context).push(MaterialPageRoute(
-              //   builder: (context) => const Page1(),
-              // ));
-            },
-            child: const Text(
-              "Page 1",
-              style: TextStyle(color: Colors.white),
-            ),
+            // Get.to(
+            //   () => CounterPage(),
+            //   binding: BindingsBuilder.put(() => CounterController()),
+            // );
+          },
+          child: const Text(
+            "Counter Page",
+            style: TextStyle(color: Colors.white),
           ),
-          const SizedBox(
-            height: 30,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[900]),
-            onPressed: () {
-              // sama seperti pushReplacement
-              // Get.off(const Page2());
-              // Get.to(const Page2());
-
-              Get.toNamed("/page_2");
-            },
-            child: const Text(
-              "Page 2",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
