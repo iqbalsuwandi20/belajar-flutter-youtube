@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic/pages/home_page.dart';
 import 'package:flutter_basic/pages/page2.dart';
 import 'package:get/get.dart';
 
@@ -32,7 +31,8 @@ class Page5 extends StatelessWidget {
               style:
                   ElevatedButton.styleFrom(backgroundColor: Colors.amber[900]),
               onPressed: () {
-                Get.offAll(const HomePage());
+                // Get.offAll(const HomePage());
+                Get.offAllNamed("/home");
               },
               child: const Text(
                 "Back to home page",

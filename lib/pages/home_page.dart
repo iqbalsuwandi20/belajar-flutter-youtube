@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_basic/pages/page1.dart';
-import 'package:flutter_basic/pages/page2.dart';
 import 'package:get/get.dart';
 
 class HomePage extends StatelessWidget {
@@ -13,7 +11,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.brown[900],
         title: const Text(
-          "Route Management GetX",
+          "Route Named Management GetX",
           style: TextStyle(color: Colors.white),
         ),
       ),
@@ -23,9 +21,15 @@ class HomePage extends StatelessWidget {
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.blue[900]),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const Page1(),
-              ));
+              // menggunakan routes getx
+              Get.toNamed("page_1");
+
+              // menggunakan routes
+              // Navigator.of(context).pushNamed("page_1");
+
+              // Navigator.of(context).push(MaterialPageRoute(
+              //   builder: (context) => const Page1(),
+              // ));
             },
             child: const Text(
               "Page 1",
@@ -40,7 +44,9 @@ class HomePage extends StatelessWidget {
             onPressed: () {
               // sama seperti pushReplacement
               // Get.off(const Page2());
-              Get.to(const Page2());
+              // Get.to(const Page2());
+
+              Get.toNamed("/page_2");
             },
             child: const Text(
               "Page 2",
