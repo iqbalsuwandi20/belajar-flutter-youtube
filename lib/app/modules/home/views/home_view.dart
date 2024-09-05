@@ -13,18 +13,18 @@ class HomeView extends GetView<HomeController> {
         centerTitle: true,
         backgroundColor: Colors.blue[600], // Setel warna latar belakang AppBar
         title: const Text(
-          'LocalDB-Shared Preferences', // Judul pada AppBar
-          style: TextStyle(color: Colors.white), // Gaya teks
+          'LocalDB-Get Storage', // Judul pada AppBar
+          style: TextStyle(color: Colors.white), // Gaya teks judul
         ),
         actions: [
           IconButton(
             onPressed: () {
               controller
-                  .resetData(); // Memanggil metode resetData dari controller
+                  .resetData(); // Memanggil metode resetData dari controller untuk mereset data
             },
             icon: const Icon(
-              Icons.restore, // Ikon restore
-              color: Colors.white, // Warna ikon
+              Icons.restore, // Ikon restore untuk mereset data
+              color: Colors.white, // Warna ikon restore
             ),
           )
         ],
@@ -37,17 +37,17 @@ class HomeView extends GetView<HomeController> {
             Obx(
               () {
                 return Text(
-                  '${controller.data}', // Menampilkan data dari controller
-                  style: const TextStyle(fontSize: 50), // Gaya teks
+                  '${controller.data}', // Menampilkan nilai data dari controller yang diobservasi
+                  style: const TextStyle(fontSize: 50), // Ukuran dan gaya teks
                 );
               },
             ),
             const SizedBox(
-              height: 20, // Spasi antara elemen
+              height: 20, // Memberikan jarak antara elemen
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment
-                  .spaceEvenly, // Elemen diatur merata di baris
+                  .spaceEvenly, // Mengatur elemen secara merata di baris
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -56,11 +56,11 @@ class HomeView extends GetView<HomeController> {
                   ),
                   onPressed: () {
                     controller
-                        .increment(); // Memanggil metode increment dari controller
+                        .increment(); // Memanggil metode increment dari controller untuk menambah data
                   },
                   child: const Text(
-                    "+", // Teks pada tombol
-                    style: TextStyle(color: Colors.white), // Gaya teks
+                    "+", // Teks tombol untuk menambah nilai
+                    style: TextStyle(color: Colors.white), // Gaya teks tombol
                   ),
                 ),
                 ElevatedButton(
@@ -70,48 +70,15 @@ class HomeView extends GetView<HomeController> {
                   ),
                   onPressed: () {
                     controller
-                        .decrement(); // Memanggil metode decrement dari controller
+                        .decrement(); // Memanggil metode decrement dari controller untuk mengurangi data
                   },
                   child: const Text(
-                    "-", // Teks pada tombol
-                    style: TextStyle(color: Colors.white), // Gaya teks
+                    "-", // Teks tombol untuk mengurangi nilai
+                    style: TextStyle(color: Colors.white), // Gaya teks tombol
                   ),
                 ),
               ],
             ),
-            // Kode di bawah ini bisa diaktifkan untuk menambahkan fungsionalitas:
-            // const SizedBox(
-            //   height: 20, // Spasi tambahan
-            // ),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Mengatur posisi elemen merata di baris
-            //   children: [
-            //     ElevatedButton(
-            //       style: ElevatedButton.styleFrom(
-            //         backgroundColor: Colors.blue[600],
-            //       ),
-            //       onPressed: () {
-            //         controller.simpanData(); // Contoh fungsi tambahan tombol
-            //       },
-            //       child: const Text(
-            //         "Simpan data",
-            //         style: TextStyle(color: Colors.white),
-            //       ),
-            //     ),
-            //     ElevatedButton(
-            //       style: ElevatedButton.styleFrom(
-            //         backgroundColor: Colors.blue[600],
-            //       ),
-            //       onPressed: () {
-            //         // Fungsi tambahan tombol
-            //       },
-            //       child: const Text(
-            //         "Hapus data",
-            //         style: TextStyle(color: Colors.white),
-            //       ),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
