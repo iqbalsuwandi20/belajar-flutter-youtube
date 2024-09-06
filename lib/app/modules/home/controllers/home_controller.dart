@@ -1,54 +1,60 @@
-import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart'; // Mengimpor GetX untuk manajemen state.
+import 'package:sqflite/sqflite.dart'; // Mengimpor SQLite untuk operasi database.
 
+import '../../../data/models/db/db_manager.dart'; // Mengimpor DbManager untuk mengelola database.
+import '../../../data/models/note_model.dart'; // Mengimpor model Note untuk catatan.
+
+// Controller untuk halaman Home yang mengelola catatan (notes)
 class HomeController extends GetxController {
-  final box = GetStorage(); // Inisialisasi penyimpanan menggunakan GetStorage
-  RxInt data = 0.obs; // Deklarasi variabel observasi untuk menyimpan nilai data
+  // List yang digunakan untuk menyimpan semua catatan, diwakili oleh model Note
+  // Menggunakan RxList agar dapat diobservasi dan diperbarui secara reaktif
+  RxList allNote = <Note>[].obs;
 
-  // Fungsi untuk mengurangi nilai data
-  void decrement() {
-    data--; // Mengurangi nilai data
-    simpanData(); // Memanggil fungsi untuk menyimpan data ke GetStorage
-  }
+  // Instance dari DbManager untuk mengakses database
+  DbManager database = DbManager.instance;
 
-  // Fungsi untuk menambah nilai data
-  void increment() {
-    data++; // Menambah nilai data
-    simpanData(); // Memanggil fungsi untuk menyimpan data ke GetStorage
-  }
+  // Fungsi untuk mengambil semua catatan dari database dan menyimpannya di `allNote`
+  Future<void> getAllNotes() async {
+    // Mendapatkan instance database dari DbManager
+    Database db = await database.db;
 
-  // Fungsi untuk menyimpan data ke GetStorage
-  void simpanData() async {
-    print("SIMPAN DATA"); // Debugging untuk mencetak log penyimpanan data
+    // Menjalankan query untuk mendapatkan semua data dari tabel "notes"
+    List<Map<String, dynamic>> data = await db.query("notes");
 
-    if (box.read("angkaTerakhir") != null) {
-      await box.remove("angkaTerakhir"); // Menghapus data lama jika ada
+    // Jika data tidak kosong, konversi data ke dalam bentuk model Note dan masukkan ke `allNote`
+    if (data.isNotEmpty) {
+      allNote(
+          Note.toJsonList(data)); // Mengubah hasil query menjadi daftar Note
+      allNote
+          .refresh(); // Memperbarui RxList agar UI merender ulang data terbaru
     } else {
-      await box.write(
-          "angkaTerakhir", data.value); // Menyimpan nilai terbaru ke GetStorage
+      // Jika tidak ada data, bersihkan list `allNote`
+      allNote.clear();
+      allNote.refresh(); // Memperbarui RxList
     }
   }
 
-  // Fungsi untuk membaca data dari GetStorage
-  void bacaData() async {
-    if (box.read("angkaTerakhir") != null) {
-      data.value = box.read("angkaTerakhir")!
-          as int; // Jika data ada, tetapkan nilai ke variabel `data`
-    }
+  // Fungsi untuk menghapus catatan dari database berdasarkan ID
+  Future deleteNotes(int id) async {
+    // Mendapatkan instance database
+    Database db = await database.db;
+
+    // Menghapus catatan dari tabel "notes" berdasarkan ID yang diberikan
+    await db.delete(
+      "notes", // Nama tabel
+      where:
+          "id = ?", // Kondisi untuk mengidentifikasi catatan yang akan dihapus
+      whereArgs: [id], // Argumen untuk menggantikan placeholder "id"
+    );
+
+    // Memanggil `getAllNotes()` untuk memperbarui daftar catatan setelah penghapusan
+    await getAllNotes();
   }
 
-  // Fungsi untuk mereset data ke nilai awal
-  void resetData() async {
-    if (box.read("angkaTerakhir") != null) {
-      await box.remove("angkaTerakhir"); // Menghapus data dari GetStorage
-      data.value = 0; // Mengatur nilai data ke 0
-    }
-  }
-
-  // Metode yang dipanggil saat controller diinisialisasi
+  // Fungsi yang dipanggil saat controller diinisialisasi
   @override
   void onInit() {
-    bacaData(); // Membaca data saat controller diinisialisasi
-    super.onInit(); // Memanggil inisialisasi dari superclass
+    getAllNotes(); // Mengambil semua catatan dari database saat controller diinisialisasi
+    super.onInit();
   }
 }
