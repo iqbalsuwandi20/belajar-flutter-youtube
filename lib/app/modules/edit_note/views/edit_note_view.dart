@@ -1,96 +1,105 @@
-import 'package:flutter/material.dart'; // Paket Flutter untuk membangun UI.
-import 'package:flutter_intermediate/app/data/models/note_model.dart'; // Mengimpor model Note untuk catatan.
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import '../../../data/databases/note_database.dart';
+import '../../home/controllers/home_controller.dart';
+import '../controllers/edit_note_controller.dart';
 
-import 'package:get/get.dart'; // Paket GetX untuk manajemen state dan routing.
-
-import '../../home/controllers/home_controller.dart'; // Mengimpor HomeController untuk mengelola catatan.
-import '../controllers/edit_note_controller.dart'; // Mengimpor EditNoteController untuk mengelola pengeditan catatan.
-
-// Kelas EditNoteView untuk menampilkan UI pengeditan catatan
-// ignore: must_be_immutable digunakan untuk mengabaikan peringatan jika variabel diubah setelah inisialisasi
+/// Tampilan (View) buat ubah catatan yang udah ada.
+// ignore: must_be_immutable
 class EditNoteView extends GetView<EditNoteController> {
-  EditNoteView({super.key});
-
-  // Variabel untuk menyimpan catatan yang akan diedit, diambil dari argument yang diteruskan oleh Get
-  Note note = Get.arguments;
-
-  // Mengambil instance HomeController untuk memperbarui daftar catatan setelah pengeditan
+  /// Ngambil instance HomeController pake GetX.
   final HomeController homeC = Get.find();
+
+  /// Ngambil data catatan yang mau diubah dari argumen yang dikirim.
+  NoteDatabaseData noteDatabaseData = Get.arguments;
+
+  /// Konstruktor buat EditNoteView.
+  EditNoteView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Mengisi nilai awal dari TextField dengan data catatan yang ada (title dan desc)
-    controller.titleC.text = note.title;
-    controller.descC.text = note.desc;
+    /// Isi teks awal di TextField pake data catatan yang ada.
+    controller.titleC.text = noteDatabaseData.title;
+    controller.descC.text = noteDatabaseData.desc;
 
     return Scaffold(
       appBar: AppBar(
+        /// Judul yang nongol di AppBar.
         title: const Text(
-          'Edit Note', // Menampilkan judul 'Edit Note' di AppBar
-          style: TextStyle(color: Colors.white), // Warna teks putih
+          'Ubah Catetan',
+          style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true, // Menjadikan judul berada di tengah
-        backgroundColor: Colors.blue[600], // Warna latar belakang AppBar biru
-        leading: const SizedBox(), // Menghilangkan tombol kembali default
+
+        /// Warna latar belakang AppBar, biar keren gitu.
+        backgroundColor: Colors.blue[600],
+
+        /// Ngehilangkan tombol kembali di AppBar.
+        leading: const SizedBox(),
+
+        /// Ngepasin judul di tengah AppBar biar keren.
+        centerTitle: true,
       ),
-
-      // Body utama dari UI yang berisi form pengeditan catatan
       body: ListView(
-        padding: const EdgeInsets.all(20), // Memberikan padding pada ListView
+        padding: const EdgeInsets.all(20),
         children: [
-          // TextField untuk mengedit judul catatan
+          /// Input buat judul catatan, pake TextField.
           TextField(
-            controller: controller
-                .titleC, // Menghubungkan dengan controller untuk mengelola input judul
+            controller: controller.titleC,
             decoration: const InputDecoration(
-              labelText: "Judul", // Label untuk input judul
-              border: OutlineInputBorder(), // Gaya border outline
+              labelText: "Judulnya",
+              border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(
-            height: 20, // Jarak antar widget
-          ),
+          const SizedBox(height: 15),
 
-          // TextField untuk mengedit deskripsi catatan
+          /// Input buat deskripsi catatan, juga pake TextField.
           TextField(
-            controller: controller
-                .descC, // Menghubungkan dengan controller untuk mengelola input deskripsi
+            controller: controller.descC,
             decoration: const InputDecoration(
-              labelText: "Deskripsi", // Label untuk input deskripsi
-              border: OutlineInputBorder(), // Gaya border outline
+              labelText: "Deskripsinya",
+              border: OutlineInputBorder(),
             ),
           ),
-          const SizedBox(
-            height: 50, // Jarak antar widget
-          ),
+          const SizedBox(height: 30),
 
-          // Tombol untuk mengonfirmasi pengeditan catatan
+          /// Tombol buat nyimpen perubahan catatan, pake Obx buat
+          /// ngeliat perubahan status loading.
           Obx(
             () {
               return ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[600], // Warna latar tombol
-                ),
-                onPressed: () async {
-                  // Jika tidak sedang dalam status loading
-                  if (controller.isLoading.isFalse) {
-                    // Memanggil fungsi untuk mengedit catatan berdasarkan ID
-                    controller.editNotes(note.id);
 
-                    // Memperbarui daftar catatan setelah catatan diedit
-                    await homeC.getAllNotes();
+                  /// Set warna latar belakang tombol.
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue[600]),
 
-                    // Kembali ke halaman sebelumnya setelah pengeditan selesai
-                    Get.back();
-                  }
-                },
-                // Teks tombol, menampilkan "Mengubah Pesan" saat tidak loading dan "Tunggu.." saat loading
-                child: Text(
-                  controller.isLoading.isFalse ? "Mengubah Pesan" : "Tunggu..",
-                  style:
-                      const TextStyle(color: Colors.white), // Warna teks putih
-                ),
-              );
+                  /// Fungsi yang jalan kalo tombolnya diklik.
+                  onPressed: () async {
+                    if (controller.isLoading.isFalse) {
+                      /// Set status loading jadi true.
+                      controller.isLoading.value = true;
+
+                      /// Update catatan di database dengan data baru.
+                      homeC.noteM.updateNotes(NoteDatabaseData(
+                        id: noteDatabaseData.id,
+                        title: controller.titleC.text,
+                        desc: controller.descC.text,
+                      ));
+
+                      /// Set status loading jadi false setelah selesai.
+                      controller.isLoading.value = false;
+
+                      /// Balik ke halaman sebelumnya setelah catatan diubah.
+                      Get.back();
+                    }
+                  },
+
+                  /// Teks di tombol yang berubah sesuai status loading.
+                  child: Text(
+                    (controller.isLoading.isFalse)
+                        ? "Ubah Catetan"
+                        : "Lagi Proses..",
+                    style: const TextStyle(color: Colors.white),
+                  ));
             },
           ),
         ],
