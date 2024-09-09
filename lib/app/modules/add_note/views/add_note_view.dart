@@ -1,97 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/databases/note_database.dart';
-import '../../home/controllers/home_controller.dart';
 import '../controllers/add_note_controller.dart';
 
-// ignore: must_be_immutable
-/// Tampilan (View) buat nambahin catatan baru nih.
+// Tampilan buat nambah catetan
 class AddNoteView extends GetView<AddNoteController> {
-  /// Ngambil instance HomeController pake GetX.
-  final HomeController homeC = Get.find();
-
-  /// Konstruktor buat AddNoteView.
-  AddNoteView({super.key});
+  const AddNoteView({super.key}); // Konstruktor, key opsional
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        /// Judul yang nongol di AppBar.
         title: const Text(
-          'Nambah Catatan',
-          style: TextStyle(color: Colors.white),
+          'Nambah Catatan', // Judul di AppBar
+          style: TextStyle(color: Colors.white), // Warna teks putih
         ),
-
-        /// Warna latar belakang AppBar, biar keren gitu.
-        backgroundColor: Colors.blue[600],
-
-        /// Ngehilangkan tombol kembali di AppBar.
-        leading: const SizedBox(),
-
-        /// Ngepasin judul di tengah AppBar biar keren.
-        centerTitle: true,
+        centerTitle: true, // Judul ditengah-tengah
+        backgroundColor: Colors.blue[600], // Warna background AppBar biru gelap
+        leading:
+            const SizedBox(), // Kosongin icon leading, biar gak ada apa-apa di sebelah kiri
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(
+            20), // Padding di seluruh body, biar gak mepet-mepet
         children: [
-          /// Input buat judul catatan, pake TextField.
+          // Input field buat judul catetan
           TextField(
-            controller: controller.titleC,
+            controller: controller
+                .titleC, // Controller buat ngatur inputan judul catetan
+            autocorrect: false, // Non-aktifkan autocorrect, biar gak ganggu
+            textInputAction: TextInputAction
+                .next, // Tombol action berikutnya di keyboard, biar langsung pindah ke field berikutnya
             decoration: const InputDecoration(
-              labelText: "Judulnya",
-              border: OutlineInputBorder(),
-            ),
+                labelText: "Judul", // Label di atas inputan
+                border:
+                    OutlineInputBorder() // Border biar inputannya kelihatan jelas
+                ),
           ),
-          const SizedBox(height: 15),
-
-          /// Input buat deskripsi catatan, juga pake TextField.
+          const SizedBox(
+            height: 20, // Jarak antara input field, biar ada spasi
+          ),
+          // Input field buat deskripsi catetan
           TextField(
-            controller: controller.descC,
+            controller: controller
+                .descC, // Controller buat ngatur inputan deskripsi catetan
+            autocorrect: false, // Non-aktifkan autocorrect
+            textInputAction:
+                TextInputAction.done, // Tombol action selesai di keyboard
             decoration: const InputDecoration(
-              labelText: "Deskripsinya",
-              border: OutlineInputBorder(),
-            ),
+                labelText: "Deskripsi", // Label di atas inputan
+                border: OutlineInputBorder() // Border di inputan
+                ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(
+            height: 50, // Jarak sebelum tombol, biar ada ruang yang cukup
+          ),
+          // Tombol buat nambah catetan
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.blue[600]), // Warna background tombol biru gelap
+            onPressed: () async {
+              // Cek status loading, biar gak ada double click
+              if (controller.isLoading.isFalse) {
+                await controller
+                    .addNote(); // Panggil fungsi buat nambah catetan
 
-          /// Tombol buat nambahin catatan, pake Obx buat ngeliat perubahan status loading.
-          Obx(
-            () {
-              return ElevatedButton(
-
-                  /// Set warna latar belakang tombol.
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600]),
-
-                  /// Fungsi yang jalan kalo tombolnya diklik.
-                  onPressed: () async {
-                    if (controller.isLoading.isFalse) {
-                      /// Set status loading jadi true.
-                      controller.isLoading.value = true;
-
-                      /// Masukin catatan baru ke database.
-                      await homeC.noteM.insertNotes(NoteDatabaseData(
-                        title: controller.titleC.text,
-                        desc: controller.descC.text,
-                      ));
-
-                      /// Set status loading jadi false setelah selesai.
-                      controller.isLoading.value = false;
-
-                      /// Balik ke halaman sebelumnya setelah catatan ditambah.
-                      Get.back();
-                    }
-                  },
-
-                  /// Teks di tombol yang berubah sesuai status loading.
-                  child: Text(
-                    (controller.isLoading.isFalse)
-                        ? "Nambah Catetan"
-                        : "Lagi Proses..",
-                    style: const TextStyle(color: Colors.white),
-                  ));
+                Get.back(); // Kembali ke layar sebelumnya setelah catetan ditambah
+              }
             },
+            child: Text(
+              controller.isLoading.isFalse
+                  ? "Nambah Catatan"
+                  : "Lagi Proses..", // Teks tombol tergantung status loading
+              style: const TextStyle(
+                  color: Colors.white), // Warna teks tombol putih
+            ),
           ),
         ],
       ),

@@ -1,105 +1,96 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../../data/databases/note_database.dart';
+import '../../../data/databases/database.dart';
 import '../../../routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
-// ignore: must_be_immutable
-/// Ini nih, tampilan utama (HomeView) buat lo ngeliat semua catatan yang udah lo simpen.
+// Tampilan utama yang ngelist semua catetan dari database lokal
 class HomeView extends GetView<HomeController> {
-  /// Konstruktor buat HomeView, bro.
-  const HomeView({super.key});
+  const HomeView({super.key}); // Constructor dengan key opsional
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true, // Biar judulnya di tengah, stylish banget kan?
+        centerTitle: true, // Biar judulnya di tengah, biar keren aja
         backgroundColor:
-            Colors.blue[600], // Latar belakang AppBar warna biru, kece abis!
+            Colors.blue[600], // Warna background AppBar biru, biar lebih cool
         title: const Text(
-          'LocalDB - Moor', // Judul aplikasi di AppBar, biar lo tau ini app database lokal.
+          'LocalDB - Hive', // Judul AppBar, buat nunjukin ini aplikasi database lokal
           style: TextStyle(
-              color: Colors.white), // Teksnya putih biar kontras sama birunya.
+            color: Colors.white, // Teks putih biar kontras sama latar biru
+          ),
         ),
       ),
-      body: StreamBuilder<List<NoteDatabaseData>>(
-          stream: controller.noteM
-              .streamAllNotes(), // Ini nge-stream semua catatan dari database, real-time bro.
-          builder: (context, snap) {
-            if (snap.connectionState == ConnectionState.waiting) {
-              // Kalau lagi loading, tampilkan loading spinner.
-              return const Center(
-                child:
-                    CircularProgressIndicator(), // Loading circle yang muter-muter.
-              );
-            }
-            // Kalau gak ada data, kasih info kalau belum ada catatan.
-            // ignore: prefer_is_empty
-            if (snap.data?.length == 0 || snap.data == null) {
+      body: ValueListenableBuilder<Box<Notes>>(
+          // Listener buat box Notes, biar UI otomatis update kalo ada perubahan
+          valueListenable: NoteManager.getAllNotes().listenable(),
+          builder: (context, box, _) {
+            List<Notes> allNotes = box.values
+                .toList()
+                .cast<Notes>(); // Ambil semua catetan dari box
+            if (allNotes.isEmpty) {
+              // Kalo enggak ada catetan, tampilkan pesan "Tidak ada data"
               return const Center(
                 child: Text(
-                    "Belum ada catatan, bro!"), // Pesan yang tampil kalau belum ada catatan.
+                  "Tidak ada data", // Pesan kalau data kosong
+                  style: TextStyle(
+                      fontWeight:
+                          FontWeight.bold), // Teks bold biar lebih jelas
+                ),
               );
             }
-            // Kalau udah ada data, kita bikin ListView buat nampilin semua catatan.
             return ListView.builder(
-              itemCount: snap.data!.length, // Jumlah item sesuai data yang ada.
-              padding: const EdgeInsets.all(
-                  10), // Biar ada jarak dikit dari pinggir layar.
+              // Buat tampilan daftar catetan
+              itemCount: allNotes.length, // Jumlah item di list
+              padding: const EdgeInsets.all(20), // Padding di seluruh list
               itemBuilder: (context, index) {
-                NoteDatabaseData noteDatabaseData =
-                    snap.data![index]; // Ambil catatan sesuai index-nya.
+                Notes notes = allNotes[index]; // Ambil catetan sesuai index
                 return ListTile(
-                  // Kalo lo tap, lo bakal diarahkan buat ngedit catatan.
                   onTap: () {
+                    // Kalo di-tap, buka halaman edit catetan dengan argumen catetan yang dipilih
                     Get.toNamed(
-                      Routes.EDIT_NOTE, // Menuju ke halaman edit catatan.
-                      arguments:
-                          noteDatabaseData, // Bawa data catatan yang mau diedit.
+                      Routes.EDIT_NOTE, // Rute ke halaman edit catetan
+                      arguments: notes, // Kirim catetan ke halaman edit
                     );
                   },
-                  // Avatar lingkaran dengan nomor ID catatan.
                   leading: CircleAvatar(
+                    // Avatar di sebelah kiri, tampilkan ID catetan
                     backgroundColor:
-                        Colors.blue[600], // Biar matching warna birunya.
+                        Colors.blue[600], // Warna background avatar
                     child: Text(
-                      "${noteDatabaseData.id}", // Tampilkan ID catatan di sini.
+                      "${notes.id}", // ID catetan
                       style: const TextStyle(
-                          color: Colors.white), // Teksnya putih biar stand out.
+                          color: Colors.white), // Teks putih biar kontras
                     ),
                   ),
-                  // Judul dan deskripsi catatan.
-                  title: Text(noteDatabaseData.title),
-                  subtitle: Text(noteDatabaseData.desc),
-                  // Tombol delete buat hapus catatan.
+                  title: Text("${notes.title}"), // Judul catetan
+                  subtitle: Text("${notes.desc}"), // Deskripsi catetan
                   trailing: IconButton(
-                      onPressed: () {
-                        controller.noteM.deleteNotes(
-                            noteDatabaseData); // Hapus catatan dari database.
-                      },
-                      icon: Icon(
-                        Icons.delete, // Ikon tong sampah buat hapus catatan.
-                        color: Colors.blue[
-                            600], // Warna biru biar tetap konsisten sama tema.
-                      )),
+                    // Tombol hapus di sebelah kanan
+                    onPressed: () async {
+                      await notes.delete(); // Hapus catetan dari database
+                    },
+                    icon: Icon(
+                      Icons.delete_forever_outlined, // Icon hapus catetan
+                      color: Colors.blue[600], // Warna icon biru
+                    ),
+                  ),
                 );
               },
             );
           }),
-      // Tombol buat tambah catatan baru.
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.blue[600], // Warna background tombol biru
         onPressed: () {
-          Get.toNamed(
-            Routes.ADD_NOTE, // Ke halaman tambah catatan baru.
-          );
+          // Kalo di-tap, buka halaman tambah catetan
+          Get.toNamed(Routes.ADD_NOTE); // Rute ke halaman tambah catetan
         },
-        backgroundColor:
-            Colors.blue[600], // Warna biru lagi biar senada sama tema.
         child: const Icon(
-          Icons.add, // Ikon tambah (+) buat nambahin catatan.
-          color: Colors.white, // Putih biar kontras sama background tombolnya.
+          Icons.add, // Icon tambah catetan
+          color: Colors.white, // Warna icon putih
         ),
       ),
     );

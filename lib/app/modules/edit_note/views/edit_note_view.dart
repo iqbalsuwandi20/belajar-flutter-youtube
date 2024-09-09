@@ -1,106 +1,86 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/databases/note_database.dart';
-import '../../home/controllers/home_controller.dart';
+import '../../../data/databases/database.dart';
 import '../controllers/edit_note_controller.dart';
 
-/// Tampilan (View) buat ubah catatan yang udah ada.
-// ignore: must_be_immutable
+// Tampilan buat ngedit catetan
+// ignore: must_be_immutable // Digunakan buat ngilangin warning dari Dart terkait parameter 'notes' yang bakal diubah
 class EditNoteView extends GetView<EditNoteController> {
-  /// Ngambil instance HomeController pake GetX.
-  final HomeController homeC = Get.find();
+  EditNoteView({super.key}); // Konstruktor dengan key opsional
 
-  /// Ngambil data catatan yang mau diubah dari argumen yang dikirim.
-  NoteDatabaseData noteDatabaseData = Get.arguments;
-
-  /// Konstruktor buat EditNoteView.
-  EditNoteView({super.key});
+  // Ambil objek catetan yang mau diedit dari argumen yang dikirim
+  Notes notes = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
-    /// Isi teks awal di TextField pake data catatan yang ada.
-    controller.titleC.text = noteDatabaseData.title;
-    controller.descC.text = noteDatabaseData.desc;
+    // Set text controller dengan data dari catetan yang mau diedit
+    controller.titleC.text = notes.title!;
+    controller.descC.text = notes.desc!;
 
     return Scaffold(
       appBar: AppBar(
-        /// Judul yang nongol di AppBar.
         title: const Text(
-          'Ubah Catetan',
-          style: TextStyle(color: Colors.white),
+          'Mengubah Catatan', // Judul di AppBar
+          style: TextStyle(color: Colors.white), // Warna teks putih
         ),
-
-        /// Warna latar belakang AppBar, biar keren gitu.
-        backgroundColor: Colors.blue[600],
-
-        /// Ngehilangkan tombol kembali di AppBar.
-        leading: const SizedBox(),
-
-        /// Ngepasin judul di tengah AppBar biar keren.
-        centerTitle: true,
+        centerTitle: true, // Judul ditengah-tengah
+        backgroundColor: Colors.blue[600], // Warna background AppBar biru gelap
+        leading: const SizedBox(), // Kosongin icon leading di sebelah kiri
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20), // Padding di seluruh body
         children: [
-          /// Input buat judul catatan, pake TextField.
+          // Input field buat judul catetan
           TextField(
-            controller: controller.titleC,
+            controller:
+                controller.titleC, // Controller yang ngatur inputan judul
+            autocorrect: false, // Non-aktifkan autocorrect biar lebih kontrol
+            textInputAction: TextInputAction
+                .next, // Tombol action berikutnya di keyboard, pindah ke field berikutnya
             decoration: const InputDecoration(
-              labelText: "Judulnya",
-              border: OutlineInputBorder(),
-            ),
+                labelText: "Judul", // Label di atas inputan
+                border:
+                    OutlineInputBorder() // Border di inputan biar kelihatan jelas
+                ),
           ),
-          const SizedBox(height: 15),
-
-          /// Input buat deskripsi catatan, juga pake TextField.
+          const SizedBox(
+            height: 20, // Jarak antara input field judul dan deskripsi
+          ),
+          // Input field buat deskripsi catetan
           TextField(
-            controller: controller.descC,
+            controller:
+                controller.descC, // Controller yang ngatur inputan deskripsi
+            autocorrect: false, // Non-aktifkan autocorrect
+            textInputAction:
+                TextInputAction.done, // Tombol action selesai di keyboard
             decoration: const InputDecoration(
-              labelText: "Deskripsinya",
-              border: OutlineInputBorder(),
-            ),
+                labelText: "Deskripsi", // Label di atas inputan
+                border: OutlineInputBorder() // Border di inputan
+                ),
           ),
-          const SizedBox(height: 30),
-
-          /// Tombol buat nyimpen perubahan catatan, pake Obx buat
-          /// ngeliat perubahan status loading.
-          Obx(
-            () {
-              return ElevatedButton(
-
-                  /// Set warna latar belakang tombol.
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue[600]),
-
-                  /// Fungsi yang jalan kalo tombolnya diklik.
-                  onPressed: () async {
-                    if (controller.isLoading.isFalse) {
-                      /// Set status loading jadi true.
-                      controller.isLoading.value = true;
-
-                      /// Update catatan di database dengan data baru.
-                      homeC.noteM.updateNotes(NoteDatabaseData(
-                        id: noteDatabaseData.id,
-                        title: controller.titleC.text,
-                        desc: controller.descC.text,
-                      ));
-
-                      /// Set status loading jadi false setelah selesai.
-                      controller.isLoading.value = false;
-
-                      /// Balik ke halaman sebelumnya setelah catatan diubah.
-                      Get.back();
-                    }
-                  },
-
-                  /// Teks di tombol yang berubah sesuai status loading.
-                  child: Text(
-                    (controller.isLoading.isFalse)
-                        ? "Ubah Catetan"
-                        : "Lagi Proses..",
-                    style: const TextStyle(color: Colors.white),
-                  ));
+          const SizedBox(
+            height: 50, // Jarak sebelum tombol simpan
+          ),
+          // Tombol buat simpen perubahan catetan
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Colors.blue[600]), // Warna background tombol biru gelap
+            onPressed: () async {
+              // Cek apakah lagi proses loading atau enggak
+              if (controller.isLoading.isFalse) {
+                await controller
+                    .editNote(notes); // Panggil fungsi buat ngedit catetan
+                Get.back(); // Kembali ke layar sebelumnya setelah catetan diubah
+              }
             },
+            child: Text(
+              controller.isLoading.isFalse
+                  ? "Mengubah Catatan" // Teks tombol kalo lagi enggak ada proses
+                  : "Lagi Proses..", // Teks tombol kalo lagi proses
+              style: const TextStyle(
+                  color: Colors.white), // Warna teks tombol putih
+            ),
           ),
         ],
       ),
