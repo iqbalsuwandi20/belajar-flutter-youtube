@@ -1,96 +1,133 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/material.dart'; // Import buat widget di Flutter
+import 'package:flutter_intermediate/app/models/note_models.dart'; // Import model Note biar gampang akses data
+import 'package:get/get.dart'; // Import GetX buat state management
 
-import '../../../data/databases/database.dart';
-import '../../../routes/app_pages.dart';
-import '../controllers/home_controller.dart';
+import '../../../routes/app_pages.dart'; // Import routes buat navigasi halaman
+import '../controllers/home_controller.dart'; // Import controller home biar bisa akses logika bisnis
 
-// Tampilan utama yang ngelist semua catetan dari database lokal
 class HomeView extends GetView<HomeController> {
-  const HomeView({super.key}); // Constructor dengan key opsional
+  // Ini adalah halaman Home
+  const HomeView({super.key}); // Constructor dengan key optional
 
   @override
   Widget build(BuildContext context) {
+    // Build method buat nge-render UI
     return Scaffold(
+      // Ini parent widget buat struktur layout halaman
       appBar: AppBar(
-        centerTitle: true, // Biar judulnya di tengah, biar keren aja
-        backgroundColor:
-            Colors.blue[600], // Warna background AppBar biru, biar lebih cool
+        // Ini header di atas layar
+        centerTitle: true, // Biar title di tengah
+        backgroundColor: Colors.blue[600], // Warna background AppBar
         title: const Text(
-          'LocalDB - Hive', // Judul AppBar, buat nunjukin ini aplikasi database lokal
+          // Title dari AppBar
+          'OnlineDB - Supabase', // Nama aplikasi
           style: TextStyle(
-            color: Colors.white, // Teks putih biar kontras sama latar biru
+            color: Colors.white, // Warna teks title jadi putih
           ),
         ),
+        actions: [
+          // Ini buat icon button di sebelah kanan AppBar
+          IconButton(
+            onPressed: () {
+              Get.toNamed(Routes.PROFILE); // Arahkan user ke halaman profile
+            },
+            icon: const Icon(
+              // Icon orang di kanan atas buat akses profil
+              Icons.person_2_outlined,
+              color: Colors.white, // Warna icon putih biar serasi sama title
+            ),
+          ),
+        ],
       ),
-      body: ValueListenableBuilder<Box<Notes>>(
-          // Listener buat box Notes, biar UI otomatis update kalo ada perubahan
-          valueListenable: NoteManager.getAllNotes().listenable(),
-          builder: (context, box, _) {
-            List<Notes> allNotes = box.values
-                .toList()
-                .cast<Notes>(); // Ambil semua catetan dari box
-            if (allNotes.isEmpty) {
-              // Kalo enggak ada catetan, tampilkan pesan "Tidak ada data"
-              return const Center(
-                child: Text(
-                  "Tidak ada data", // Pesan kalau data kosong
-                  style: TextStyle(
-                      fontWeight:
-                          FontWeight.bold), // Teks bold biar lebih jelas
+      body: FutureBuilder(
+          // Widget buat handle data yang di-load dari database
+          future:
+              controller.getAllNotes(), // Ambil semua catatan dari controller
+          builder: (context, snap) {
+            // Builder buat nentuin UI tergantung state data
+            if (snap.connectionState == ConnectionState.waiting) {
+              // Kalau data masih loading
+              return Center(
+                // Tampilkan loading spinner
+                child: CircularProgressIndicator(
+                  color: Colors.blue[600], // Spinner warna biru biar serasi
                 ),
               );
             }
-            return ListView.builder(
-              // Buat tampilan daftar catetan
-              itemCount: allNotes.length, // Jumlah item di list
-              padding: const EdgeInsets.all(20), // Padding di seluruh list
-              itemBuilder: (context, index) {
-                Notes notes = allNotes[index]; // Ambil catetan sesuai index
-                return ListTile(
-                  onTap: () {
-                    // Kalo di-tap, buka halaman edit catetan dengan argumen catetan yang dipilih
-                    Get.toNamed(
-                      Routes.EDIT_NOTE, // Rute ke halaman edit catetan
-                      arguments: notes, // Kirim catetan ke halaman edit
-                    );
-                  },
-                  leading: CircleAvatar(
-                    // Avatar di sebelah kiri, tampilkan ID catetan
-                    backgroundColor:
-                        Colors.blue[600], // Warna background avatar
-                    child: Text(
-                      "${notes.id}", // ID catetan
-                      style: const TextStyle(
-                          color: Colors.white), // Teks putih biar kontras
-                    ),
-                  ),
-                  title: Text("${notes.title}"), // Judul catetan
-                  subtitle: Text("${notes.desc}"), // Deskripsi catetan
-                  trailing: IconButton(
-                    // Tombol hapus di sebelah kanan
-                    onPressed: () async {
-                      await notes.delete(); // Hapus catetan dari database
-                    },
-                    icon: Icon(
-                      Icons.delete_forever_outlined, // Icon hapus catetan
-                      color: Colors.blue[600], // Warna icon biru
-                    ),
-                  ),
-                );
+            return Obx(
+              // Obx buat auto-refresh UI kalo data di controller berubah
+              () {
+                return controller.allNotes.isEmpty // Kalau list catatan kosong
+                    ? const Center(
+                        // Tampilkan teks "TIDAK ADA DATA"
+                        child: Text(
+                          "TIDAK ADA DATA", // Pesan kalo ga ada catatan yang bisa ditampilkan
+                          style: TextStyle(
+                              fontSize:
+                                  20), // Ukuran teks agak gede biar keliatan
+                        ),
+                      )
+                    : ListView.builder(
+                        // Kalau ada data, tampilkan dalam bentuk ListView
+                        padding: const EdgeInsets.all(20), // Padding biar rapi
+                        itemCount: controller
+                            .allNotes.length, // Jumlah item dalam list
+                        itemBuilder: (context, index) {
+                          // Buat tiap item di list
+                          NoteModels noteModels = controller
+                              .allNotes[index]; // Ambil data note per item
+                          return ListTile(
+                            // Bikin item list
+                            onTap: () {
+                              // Kalau di-tap, buka halaman edit note
+                              Get.toNamed(
+                                  Routes
+                                      .EDIT_NOTE, // Arahkan ke halaman edit dengan data note yang dipilih
+                                  arguments: noteModels);
+                            },
+                            leading: CircleAvatar(
+                              // Bikin avatar lingkaran di kiri item list
+                              backgroundColor: Colors
+                                  .blue[600], // Warna background avatar biru
+                              child: Text(
+                                "${noteModels.id}", // Tampilkan ID note di avatar
+                                style: const TextStyle(
+                                    color: Colors
+                                        .white), // Warna teks di avatar putih
+                              ),
+                            ),
+                            title: Text(
+                                "${noteModels.title}"), // Tampilkan title note
+                            subtitle: Text(
+                                "${noteModels.desc}"), // Tampilkan deskripsi note
+                            trailing: IconButton(
+                                // Icon button buat delete note di sebelah kanan
+                                onPressed: () {
+                                  // Kalau di-tap, hapus note
+                                  controller.deleteNote(noteModels
+                                      .id!); // Panggil fungsi delete note di controller
+                                },
+                                icon: Icon(
+                                  Icons.delete_forever_outlined, // Icon delete
+                                  color: Colors.blue[
+                                      600], // Warna icon delete biru biar serasi
+                                )),
+                          );
+                        },
+                      );
               },
             );
           }),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue[600], // Warna background tombol biru
+        // Button buat tambah note baru
+        backgroundColor: Colors.blue[600], // Warna button biru
         onPressed: () {
-          // Kalo di-tap, buka halaman tambah catetan
-          Get.toNamed(Routes.ADD_NOTE); // Rute ke halaman tambah catetan
+          Get.toNamed(Routes.ADD_NOTE); // Arahkan user ke halaman tambah note
         },
         child: const Icon(
-          Icons.add, // Icon tambah catetan
-          color: Colors.white, // Warna icon putih
+          // Icon tambah di button
+          Icons.add,
+          color: Colors.white, // Warna icon tambah putih
         ),
       ),
     );
